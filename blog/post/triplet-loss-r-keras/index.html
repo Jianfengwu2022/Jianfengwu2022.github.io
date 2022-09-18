@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Implementing Triplet Losses for Implicit Feedback Recommender Systems with R and Keras - Nan Xiao | 肖楠 </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="" />
+    <meta property="og:site_name" content="Nan Xiao | 肖楠" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://jianfengwu2022.github.io/blog/post/triplet-loss-r-keras/" />
+    <meta property="og:title" content="Implementing Triplet Losses for Implicit Feedback Recommender Systems with R and Keras" />
+    <meta property="og:image" content="https://jianfengwu2022.github.io/image/three-palms-jamie-davies.jpg" />
+    <meta property="og:description" content="" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:site" content="@nanxstats">
+    <meta name="twitter:creator" content="@nanxstats">
+    
+    <meta name="twitter:title" content="Implementing Triplet Losses for Implicit Feedback Recommender Systems with R and Keras" />
+    <meta name="twitter:description" content="" />
+    <meta name="twitter:image" content="https://jianfengwu2022.github.io/image/three-palms-jamie-davies.jpg" />
+
+    <link rel="canonical" href="https://jianfengwu2022.github.io/blog/post/triplet-loss-r-keras/">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css" integrity="sha512-XWTTruHZEYJsxV3W/lSXG1n3Q39YIWOstqvmFsdNEEQfHoZ6vm6E9GK2OrF6DSJSpIbRbi+Nn0WDPID9O7xB2Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://jianfengwu2022.github.io/css/custom.css" />
+
+    
+    <link rel="stylesheet" href="https://jianfengwu2022.github.io/css/textmate.css" />
+    
+
+    
+
+    <link rel="shortcut icon"
+        href="https://jianfengwu2022.github.io/image/favicon.png">
+
+    
+    <link href="https://jianfengwu2022.github.io/index.xml" rel="alternate" type="application/rss+xml" title="Nan Xiao | 肖楠" />
+    
+</head>
+
+<body>
+    
+<div class="my-4 my-lg-5 header">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        
+                        <a href="https://jianfengwu2022.github.io/">
+                            <img class="logo img-fluid d-block rounded-circle"
+                                src="https://jianfengwu2022.github.io/image/nanxiao.jpg" alt="Portrait of Nan Xiao">
+                        </a>
+                        
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <a href="https://jianfengwu2022.github.io/">
+                            <h1 class="name">Nan Xiao</h1>
+                        </a>
+
+                        <ul class="nav nav-primary">
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-blog"
+                                    href="https://jianfengwu2022.github.io/blog/">
+                                    
+                                    Blog
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-software"
+                                    href="https://jianfengwu2022.github.io/software/">
+                                    
+                                    Software
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-papers"
+                                    href="https://jianfengwu2022.github.io/papers/">
+                                    
+                                    Papers
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-talks"
+                                    href="https://jianfengwu2022.github.io/talks/">
+                                    
+                                    Talks
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-books"
+                                    href="https://jianfengwu2022.github.io/books/">
+                                    
+                                    Books
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <h1 class="blog-post-title">Implementing Triplet Losses for Implicit Feedback Recommender Systems with R and Keras</h1>
+
+                <div class="mb-md-4 meta">
+                    
+                    
+                    <span class="author" title="Nan Xiao">
+                        Nan Xiao
+                    </span>
+                    
+                    
+
+                    <span class="date middot" title='Wed Aug 29 2018 19:30:00 UTC'>
+                        2018-08-29
+                    </span>
+
+                    <span class="reading-time middot">
+                        5 min read
+                    </span>
+
+                    <div class="d-none d-md-inline tags">
+                        <ul class="list-unstyled d-inline">
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/deep-learning">deep learning</a>
+                            </li>
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/triplet-loss">triplet loss</a>
+                            </li>
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/metric-learning">metric learning</a>
+                            </li>
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/recommender-system">recommender system</a>
+                            </li>
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/collaborative-filtering">collaborative filtering</a>
+                            </li>
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/implicit-feedback">implicit feedback</a>
+                            </li>
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/keras">Keras</a>
+                            </li>
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/r">R</a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+
+                    <div class="d-none d-md-inline tags">
+                        <ul class="list-unstyled d-inline">
+                            
+                            
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="markdown blog-post-content">
+                    
+    
+<script src="https://jianfengwu2022.github.io/blog/post/triplet-loss-r-keras/index_files/header-attrs/header-attrs.js"></script>
+
+
+<p>All the R code for this post is available on GitHub: <a href="https://github.com/nanxstats/deep-learning-recipes">nanxstats/deep-learning-recipes</a>.</p>
+<div class="figure">
+<img src="https://jianfengwu2022.github.io/image/three-palms-jamie-davies.jpg" alt="" />
+<p class="caption">Photo: <a href="https://unsplash.com/photos/eZt5mvF7RcU">Three Palms</a> by Jamie Davies</p>
+</div>
+<p>At the end of our <a href="https://nanx.me/blog/post/recsys-binary-implicit-feedback-r-keras/">last post</a>, I briefly mentioned that the triplet loss function is a more proper loss designed for both recommendation problems with implicit feedback data and distance metric learning problems. For its importance in solving these practical problems, and also as an excellent programming exercise, I decided to implement it with R and Keras.</p>
+<div id="triplet-loss" class="section level2">
+<h2>Triplet Loss</h2>
+<p>The triplet loss makes us focus on the core of many supervised/unsupervised learning problems: learning better representations for data. The idea is pretty simple: we want to learn a custom distance metric or (low-rank) representation for our data, such that under this new metric or representation, the distance between “similar” observations is smaller, and the distance between “dissimilar” observations is larger. Here the definition of “similar” or “dissimilar” observations may come from some side information.</p>
+<p>The idea of learning a global Mahalanobis distance metric was first formalized by <a href="https://dl.acm.org/doi/10.5555/2968618.2968683">Xing et al.</a> as a convex optimization problem. The <a href="https://jmlr.csail.mit.edu/papers/volume10/weinberger09a/weinberger09a.pdf">LMNN by Weinberger and Saul</a> is the work that first formulated the metric learning problem as a localized large margin learning problem with “triplets”, partially inspired by the SVM objective function. The triplet loss was further popularized by the <a href="https://arxiv.org/abs/1503.03832">FaceNet by Schroff et al.</a> in the computer vision and especially the face recognition community. A margin-based triplet loss function looks like this:</p>
+<p><span class="math display">\[L_\text{margin}(a, p, n) = \sum \max(0, f(a, p) - f(a, n) + \varepsilon)\]</span></p>
+<p>where <span class="math inline">\(a\)</span> is an “anchor” observation. <span class="math inline">\(p\)</span> is the “positive” sample which should be closer to <span class="math inline">\(a\)</span> than the “negative” sample <span class="math inline">\(n\)</span>. We will need many such triplets <span class="math inline">\(\{a, p, n\}\)</span>. <span class="math inline">\(f\)</span> is the transformation we want to learn. <span class="math inline">\(\varepsilon\)</span> is a constant number larger than zero (tuning parameter). A natural interpretation of the loss function: the learned metric should separate the negative sample <span class="math inline">\(n\)</span> from the positive sample <span class="math inline">\(n\)</span> at least by a positive margin <span class="math inline">\(\varepsilon\)</span>.</p>
+</div>
+<div id="data-and-model" class="section level2">
+<h2>Data and Model</h2>
+<p>To make things easier to understand, this time we will use the MovieLens data as the example. Naturally, we will also use the jargon of users/items to denote the two parties presented in a recommender system.</p>
+<p>We binarized the 1 to 5 ratings to make it binary (interacting or non-interacting user-item pairs) implicit feedback data. To construct the triplets, we sample from the interacting user-items pairs and combine them with randomly sampled non-interaction items for the users.</p>
+<p>The model looks like this:</p>
+<div class="figure">
+<img src="triplet-loss-model-keras.png" alt="" />
+<p class="caption">Figure: A barebone matrix factorization model with a triplet loss for recommender systems with implicit feedback data.</p>
+</div>
+<p>From the figure, the low-rank, dense embeddings for users and items are the inputs for the loss function (the Lambda layer). By minimizing the loss function, we achieved our goal: learning representations for users and items. Note that the embedding layer for items is shared by the positive and negative items since they are inherently both items thus should use the same representation.</p>
+</div>
+<div id="implementation" class="section level2">
+<h2>Implementation</h2>
+<p>Unlike our <a href="https://nanx.me/blog/post/recsys-binary-implicit-feedback-r-keras/">last post</a> which modeled this as a classification problem, we don’t have the “labels” in the traditional sense here. Instead, the training loss itself will be the output as is shown above. Therefore, it is a little tricky to implement this with Keras because we need to build a custom loss function, build a custom metric function, and finally, build a custom prediction function. This is precisely why it would be a good programming exercise.</p>
+<p>The closest <a href="https://github.com/maciejkula/triplet_recommendations_keras">reference implementation</a> I could find is written in Python. Unfortunately, the code is a bit outdated and doesn’t play well with the latest Keras API. So I reimplemented the model in R and made it running on the latest Keras and Tensorflow backend successfully, with the help of the functional style <a href="https://keras.io/api/layers/core_layers/lambda/">lambda layers</a>.</p>
+</div>
+<div id="performance-evaluation" class="section level2">
+<h2>Performance Evaluation</h2>
+<p>The custom performance metric we implemented is a user-averaged AUC. In essence, for each user in the test set, we predict the probability if an item will be preferred by the user on all items in the test set. We then compute the AUC based on these predictions for this user, do this for all users, and average all the AUC values. Intuitively, this metric can roughly reflect the probability that a randomly selected positive item will be ranked higher than a randomly selected negative item for users.</p>
+<p>The loss and AUC change on the training/test set is visualized below.</p>
+<div class="figure">
+<img src="triplet-loss-margin-movielens.png" alt="" />
+<p class="caption">Figure: The first 20 epochs: loss and user-averaged AUC for the margin-based triplet loss model.</p>
+</div>
+</div>
+<div id="the-bpr-triplet-loss" class="section level2">
+<h2>The BPR Triplet Loss</h2>
+<p>What our reference implementation had is another type of triplet loss, namely, the <a href="https://arxiv.org/abs/1205.2618">Bayesian Personalized Ranking (BPR) loss</a>:</p>
+<p><span class="math display">\[L_\text{BPR}(a, p, n) = \sum \big(1 - \sigma(f(a, p) - f(a, n)) \big)\]</span></p>
+<p>where <span class="math inline">\(\sigma\)</span> is the sigmoid function. For the sake of completeness, I also implemented it. It has a strikingly similar performance to the margin-based model for our data here, while it converges faster with the benefit of not needing to tune the margin parameter of the loss.</p>
+<div class="figure">
+<img src="triplet-loss-bpr-movielens.png" alt="" />
+<p class="caption">Figure: The first 20 epochs: loss and user-averaged AUC for the BPR triplet loss model.</p>
+</div>
+</div>
+<div id="comments" class="section level2">
+<h2>Comments</h2>
+<p><strong>Hard negative mining.</strong> A crucial aspect for improving the performance of models with a triplet loss is about selecting or constructing more hard-to-learn triplets which can help you learn the representations or metrics better. This is often called the “hard negative mining” problem. The <a href="https://arxiv.org/abs/1503.03832">FaceNet paper</a> described their triplet selection approach. Here is also a <a href="https://omoindrot.github.io/triplet-loss">good post</a> explaining more details on this.</p>
+<p><strong>Applications.</strong> The bar of applying this method is relatively low because sometimes the required data is more accessible than fully labeled data. Conceptually, this idea can be applied to any learning problems where we can construct the triplets. An extreme case is the recsys with implicit feedback data we just showed: we only know the relative preference between entities (e.g., user’s relative preference for items). The more common scenarios are where the true labels of data are difficult to get, but one might know the distance/similarity relationships between entities (images, text, human genomes).</p>
+</div>
+
+
+
+                </div>
+
+                
+                <div class="navigation">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            
+                            <div class="mt-4 text-start">
+                                <a href="https://jianfengwu2022.github.io/blog/post/how-a-financial-crisis-started/">« How a Financial Crisis Started</a>
+                            </div>
+                            
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            
+                            <div class="mt-4 text-end">
+                                <a href="https://jianfengwu2022.github.io/blog/post/accidental-product-success/">The Accidental Product Success »</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="comments">
+    <div class="py-3 content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-sm-12 col-lg-6">
+                    <div class="comments">
+                        <script src="https://utteranc.es/client.js" repo="nanxstats/blog-comments"
+                            issue-term="pathname" label="comment" theme="github-light" crossorigin="anonymous" async>
+                            </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="footer mt-5">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <hr>
+            </div>
+        </div>
+
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol id="github" viewBox="0 0 16 16">
+                <path
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </symbol>
+            <symbol id="linkedin" viewBox="0 0 16 16">
+                <path
+                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
+            </symbol>
+            <symbol id="twitter" viewBox="0 0 16 16">
+                <path
+                    d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
+            </symbol>
+            <symbol id="rss-fill" viewBox="0 0 16 16">
+                <path
+                    d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm1.5 2.5c5.523 0 10 4.477 10 10a1 1 0 1 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1 0-2zm0 4a6 6 0 0 1 6 6 1 1 0 1 1-2 0 4 4 0 0 0-4-4 1 1 0 0 1 0-2zm.5 7a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+            </symbol>
+            <symbol id="info-circle-fill" viewBox="0 0 16 16">
+                <path
+                    d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+            </symbol>
+        </svg>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                
+                <div class="site-copyright">
+                    © 2011–2022 Nan Xiao
+                </div>
+                
+            </div>
+        </div>
+        <div class="row justify-content-center mt-1 mb-5">
+            <div class="col-sm-12 col-lg-6">
+                <div class="site-social">
+                    <ul>
+                        
+
+                        
+                        <li><a href="https://github.com/nanxstats" target="_blank" rel="noopener">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#github"></use>
+                                </svg>
+                                GitHub</a></li>
+                        
+
+                        
+
+                        
+
+                        
+                        <li><a href="https://twitter.com/nanxstats" target="_blank" rel="noopener">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#twitter"></use>
+                                </svg>
+                                Twitter
+                            </a></li>
+                        
+
+                        
+                        <li><a href="https://www.linkedin.com/in/nanxstats" target="_blank"
+                                rel="noopener">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#linkedin"></use>
+                                </svg>
+                                LinkedIn</a></li>
+                        
+
+                        
+                        <li><a href="https://jianfengwu2022.github.io/colophon/">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#info-circle-fill"></use>
+                                </svg>
+                                Colophon</a></li>
+                        
+
+                        
+                        <li><a href="https://jianfengwu2022.github.io/index.xml" class="mr-0">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#rss-fill"></use>
+                                </svg>
+                                RSS</a></li>
+                        
+
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js" integrity="sha512-gU7kztaQEl7SHJyraPfZLQCNnrKdaQi5ndOyt4L4UPL/FHDd/uB9Je6KDARIqwnNNE27hnqoWLBq+Kpe4iHfeQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/r.min.js" defer></script>
+        
+        <script>
+            window.addEventListener('load', function() {
+                hljs.highlightAll();
+            }, true);
+        </script>
+    
+
+    
+
+    
+    
+        
+<script src="https://jianfengwu2022.github.io/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+</body>
+
+</html>

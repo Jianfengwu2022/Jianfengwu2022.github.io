@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>automation on Nan Xiao | 肖楠</title>
+    <link>https://jianfengwu2022.github.io/tags/automation/</link>
+    <description>Recent content in automation on Nan Xiao | 肖楠</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 05 Sep 2022 20:30:00 +0000</lastBuildDate><atom:link href="https://jianfengwu2022.github.io/tags/automation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GUI Automation with RobotJS</title>
+      <link>https://jianfengwu2022.github.io/blog/post/gui-automation-robotjs/</link>
+      <pubDate>Mon, 05 Sep 2022 20:30:00 +0000</pubDate>
+      
+      <guid>https://jianfengwu2022.github.io/blog/post/gui-automation-robotjs/</guid>
+      <description>The code in this post is also available in this GitHub Gist.
+Disclaimer: the tools and configurations mentioned in this post are only discussed as technical examples; they do not constitute an endorsement. Use at your own risk.
+Photo by Martin Reisch.
+Today’s internet is not like it was 20 years ago for an older millennial like me. Only judging by its appearance, the internet today is plagued with cookie consent popups and paywalls.</description>
+    </item>
+    
+    <item>
+      <title>Automate HTML to PDF Printing with {promises} and {chromote}</title>
+      <link>https://jianfengwu2022.github.io/blog/post/chromote-pdf-automation/</link>
+      <pubDate>Sat, 20 Aug 2022 00:15:00 +0000</pubDate>
+      
+      <guid>https://jianfengwu2022.github.io/blog/post/chromote-pdf-automation/</guid>
+      <description>The R code in this post is also available in this GitHub Gist.
+Photo by Bank Phrom.
+chromote is an R package that allows one to automate tasks driven by web browsers. It works by providing an API to communicate with Chromium-based browsers via the Chrome DevTools Protocol (CDP). For example, CDP can help us load and print HTML pages to PDF files programmatically, similar to what one could do in the web browser GUI but with mouse clicks.</description>
+    </item>
+    
+    <item>
+      <title>A Simple Link Checker for Hugo and Blogdown Websites</title>
+      <link>https://jianfengwu2022.github.io/blog/post/link-checker/</link>
+      <pubDate>Tue, 22 Feb 2022 20:00:00 +0000</pubDate>
+      
+      <guid>https://jianfengwu2022.github.io/blog/post/link-checker/</guid>
+      <description>Photo by Katie Treadway.
+Some background I have been blogging with Hugo/blogdown for a while. One housekeeping task I have always wanted to automate with R is scanning the entire website to ensure that all the links are still working. It is essential for maintaining an enjoyable reading experience without archiving too many external links.
+Conceptually, the requirement for a generic broken link checker is quite simple:
+Get the links to all pages on the site.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> 10 Things That Matter in Deep Learning (1/5) - Nan Xiao | 肖楠 </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="" />
+    <meta property="og:site_name" content="Nan Xiao | 肖楠" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://jianfengwu2022.github.io/blog/post/10-things-matter-in-deep-learning-1/" />
+    <meta property="og:title" content="10 Things That Matter in Deep Learning (1/5)" />
+    <meta property="og:image" content="https://jianfengwu2022.github.io/image/heart-of-the-matter-otis-kaye.png" />
+    <meta property="og:description" content="" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:site" content="@nanxstats">
+    <meta name="twitter:creator" content="@nanxstats">
+    
+    <meta name="twitter:title" content="10 Things That Matter in Deep Learning (1/5)" />
+    <meta name="twitter:description" content="" />
+    <meta name="twitter:image" content="https://jianfengwu2022.github.io/image/heart-of-the-matter-otis-kaye.png" />
+
+    <link rel="canonical" href="https://jianfengwu2022.github.io/blog/post/10-things-matter-in-deep-learning-1/">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css" integrity="sha512-XWTTruHZEYJsxV3W/lSXG1n3Q39YIWOstqvmFsdNEEQfHoZ6vm6E9GK2OrF6DSJSpIbRbi+Nn0WDPID9O7xB2Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://jianfengwu2022.github.io/css/custom.css" />
+
+    
+    <link rel="stylesheet" href="https://jianfengwu2022.github.io/css/textmate.css" />
+    
+
+    
+
+    <link rel="shortcut icon"
+        href="https://jianfengwu2022.github.io/image/favicon.png">
+
+    
+    <link href="https://jianfengwu2022.github.io/index.xml" rel="alternate" type="application/rss+xml" title="Nan Xiao | 肖楠" />
+    
+</head>
+
+<body>
+    
+<div class="my-4 my-lg-5 header">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        
+                        <a href="https://jianfengwu2022.github.io/">
+                            <img class="logo img-fluid d-block rounded-circle"
+                                src="https://jianfengwu2022.github.io/image/nanxiao.jpg" alt="Portrait of Nan Xiao">
+                        </a>
+                        
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <a href="https://jianfengwu2022.github.io/">
+                            <h1 class="name">Nan Xiao</h1>
+                        </a>
+
+                        <ul class="nav nav-primary">
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-blog"
+                                    href="https://jianfengwu2022.github.io/blog/">
+                                    
+                                    Blog
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-software"
+                                    href="https://jianfengwu2022.github.io/software/">
+                                    
+                                    Software
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-papers"
+                                    href="https://jianfengwu2022.github.io/papers/">
+                                    
+                                    Papers
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-talks"
+                                    href="https://jianfengwu2022.github.io/talks/">
+                                    
+                                    Talks
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-books"
+                                    href="https://jianfengwu2022.github.io/books/">
+                                    
+                                    Books
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <h1 class="blog-post-title">10 Things That Matter in Deep Learning (1/5)</h1>
+
+                <div class="mb-md-4 meta">
+                    
+                    
+                    <span class="author" title="Nan Xiao">
+                        Nan Xiao
+                    </span>
+                    
+                    
+
+                    <span class="date middot" title='Thu Apr 12 2018 17:00:00 UTC'>
+                        2018-04-12
+                    </span>
+
+                    <span class="reading-time middot">
+                        4 min read
+                    </span>
+
+                    <div class="d-none d-md-inline tags">
+                        <ul class="list-unstyled d-inline">
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/deep-learning">deep learning</a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+
+                    <div class="d-none d-md-inline tags">
+                        <ul class="list-unstyled d-inline">
+                            
+                            
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="markdown blog-post-content">
+                    
+    
+<script src="https://jianfengwu2022.github.io/blog/post/10-things-matter-in-deep-learning-1/index_files/header-attrs/header-attrs.js"></script>
+
+
+<div class="figure">
+<img src="https://jianfengwu2022.github.io/image/heart-of-the-matter-otis-kaye.png" alt="" />
+<p class="caption"><em>Heart of the Matter</em> by Otis Kaye, 1963. The Art Institute of Chicago.</p>
+</div>
+<p>Admit it or not, neural networks (or more broadly, connectionism) are being revived to readdress almost all problems in the machine learning world. Before deep learning, there were a few much smaller hypes like matrix factorization, sparse learning, and kernel methods, but none of them is comparable to this one. Never before has a learning method been so blessed by capital, yet so cursed by it.</p>
+<p>This also means, despite the hype, deep learning did something right. Some particular components of this system are worth investigating. So, I decided to summarize some of the exciting parts of deep learning here and free these ideas from my mind.</p>
+<p>This post will be the beginning of a five post series. The series will not try to be a comprehensive or even up-to-date overview of this topic. Instead, it serves as an opinionated record of the directions I think worth exploring in this field, according to my (limited) observations in the past five years. Note that a lot of the places in the DL land are still uncharted territories, so as usual, viewer discretion is advised.</p>
+<div id="unified-learning-framework" class="section level2">
+<h2>1. Unified Learning Framework</h2>
+<p><img src="tensors-flowing.gif" align="right" width="200"></p>
+<p><em>One framework to rule them all.</em></p>
+<p>If there is only one thing that really matters in DL, this is it.</p>
+<p>Deep learning offers a unified, scalable framework for large-scale machine learning modeling. You can simply formulate a machine learning problem as minimizing a loss function, reparameterize and replace the traditional components that connect the input and outcome with deep neural networks, then optimize the (differentiable) system with an off-the-shelve optimizer, most likely a derivative version of stochastic gradient descent (SGD).</p>
+<p>A <em>unified</em> framework means it does not only work for traditional classification/regression problems. You can also apply this framework to directly optimize any adequately defined objective functions that used to be challenging to optimize or used to require customized solvers. For example, the well-known <a href="https://katbailey.github.io/post/matrix-factorization-with-tensorflow/">matrix factorization method</a> in recommender systems, or the <a href="https://blog.mlreview.com/how-to-apply-distance-metric-learning-for-street-to-shop-problem-d21247723d2a">large margin nearest neighbor based triplet loss</a> for supervised distance metric learning.</p>
+<p>Such opportunities also created an invisible war for machine learning programming frameworks. Existing frameworks like TensorFlow, Keras, PyTorch, Caffe, MXNet, and many others could help people solve machine learning problems in a standardized fashion. Many interesting techniques also come with them. For instance, <a href="https://arxiv.org/abs/1509.07164">automatic differentiation</a> is one of the key ingredients for such programming frameworks.</p>
+<p>Having a good framework for doing things is critical. Like my friend Tao <a href="https://joegaotao.github.io/2017/08/28/%E7%9B%B8%E5%85%B3%E6%8A%BD%E6%A0%B7%E8%9E%8D%E5%90%88/">discussed</a> (in Chinese), a good framework is not only useful for solving the problem itself, but also helps us better understand and fine-tune the system. Ultimately, a good framework will enable better communication and collaborative problem-solving.</p>
+</div>
+<div id="bayesian-deep-learning" class="section level2">
+<h2>2. Bayesian Deep Learning</h2>
+<p>Does the unified modeling framework idea sound familiar to you? Yes, everything described above is highly similar to what people can do in Bayesian modeling. We would first define a data model (prior + likelihood), then use MCMC/variational inference to optimize it (get the posterior). Several programming frameworks were also available.</p>
+<p>Not surprisingly, the similarity inspired people to explore renovating traditional Bayesian models with the help of deep neural networks, or vice versa, integrating uncertainty and probabilistic inference into deep neural network structures for better interpretability. Such efforts can be categorized under the name “Bayesian deep learning.”</p>
+<p>Bayesian deep learning can be useful in many scenarios requiring probabilistic inference. However, for some cases, especially in NLP applications, I doubt the models will have decent (predictive) performance gains by incorporating a DNN component, since many problems in text modeling are not as difficult as the problems in image recognition or speech recognition. As an example, there are some possibilities for doing “deep topic modeling,” but if I want to be more statistically rigorous, I would still prefer methods that do <a href="https://dl.acm.org/doi/10.1145/2736277.2741115">exact inference using MCMC</a>. In the end, we would mostly expect such crossovers help improve the scalability or interpretability of the existing models.</p>
+<div class="figure">
+<img src="lda-movie-poster-color-topics.png" alt="" />
+<p class="caption">Figure: <a href="https://nanx.me/posters/chromaclust-poster-hg48600.pdf">Latent color topics</a> in movie poster design, learned by vanilla LDA.</p>
+</div>
+<p>Several probabilistic programming frameworks are being built for Bayesian deep learning (or just Bayesian modeling), including <a href="http://edwardlib.org/">Edward</a>, <a href="https://github.com/thu-ml/zhusuan">ZhuSuan</a>, and <a href="https://greta-stats.org/">greta</a>. To some degree, they are very similar to <a href="https://mc-stan.org">Stan</a>, whereas they took alternative approaches for optimization.</p>
+<p>Next time, we will talk about feature learning and regularization.</p>
+</div>
+
+
+
+                </div>
+
+                
+                <div class="navigation">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            
+                            <div class="mt-4 text-start">
+                                <a href="https://jianfengwu2022.github.io/blog/post/the-return-of-the-native-font-stack/">« The Return of the Native Font Stack</a>
+                            </div>
+                            
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            
+                            <div class="mt-4 text-end">
+                                <a href="https://jianfengwu2022.github.io/blog/post/taking-the-long-view/">Taking the Long View »</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="comments">
+    <div class="py-3 content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-sm-12 col-lg-6">
+                    <div class="comments">
+                        <script src="https://utteranc.es/client.js" repo="nanxstats/blog-comments"
+                            issue-term="pathname" label="comment" theme="github-light" crossorigin="anonymous" async>
+                            </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="footer mt-5">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <hr>
+            </div>
+        </div>
+
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol id="github" viewBox="0 0 16 16">
+                <path
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </symbol>
+            <symbol id="linkedin" viewBox="0 0 16 16">
+                <path
+                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
+            </symbol>
+            <symbol id="twitter" viewBox="0 0 16 16">
+                <path
+                    d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
+            </symbol>
+            <symbol id="rss-fill" viewBox="0 0 16 16">
+                <path
+                    d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm1.5 2.5c5.523 0 10 4.477 10 10a1 1 0 1 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1 0-2zm0 4a6 6 0 0 1 6 6 1 1 0 1 1-2 0 4 4 0 0 0-4-4 1 1 0 0 1 0-2zm.5 7a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+            </symbol>
+            <symbol id="info-circle-fill" viewBox="0 0 16 16">
+                <path
+                    d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+            </symbol>
+        </svg>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                
+                <div class="site-copyright">
+                    © 2011–2022 Nan Xiao
+                </div>
+                
+            </div>
+        </div>
+        <div class="row justify-content-center mt-1 mb-5">
+            <div class="col-sm-12 col-lg-6">
+                <div class="site-social">
+                    <ul>
+                        
+
+                        
+                        <li><a href="https://github.com/nanxstats" target="_blank" rel="noopener">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#github"></use>
+                                </svg>
+                                GitHub</a></li>
+                        
+
+                        
+
+                        
+
+                        
+                        <li><a href="https://twitter.com/nanxstats" target="_blank" rel="noopener">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#twitter"></use>
+                                </svg>
+                                Twitter
+                            </a></li>
+                        
+
+                        
+                        <li><a href="https://www.linkedin.com/in/nanxstats" target="_blank"
+                                rel="noopener">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#linkedin"></use>
+                                </svg>
+                                LinkedIn</a></li>
+                        
+
+                        
+                        <li><a href="https://jianfengwu2022.github.io/colophon/">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#info-circle-fill"></use>
+                                </svg>
+                                Colophon</a></li>
+                        
+
+                        
+                        <li><a href="https://jianfengwu2022.github.io/index.xml" class="mr-0">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#rss-fill"></use>
+                                </svg>
+                                RSS</a></li>
+                        
+
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js" integrity="sha512-gU7kztaQEl7SHJyraPfZLQCNnrKdaQi5ndOyt4L4UPL/FHDd/uB9Je6KDARIqwnNNE27hnqoWLBq+Kpe4iHfeQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/r.min.js" defer></script>
+        
+        <script>
+            window.addEventListener('load', function() {
+                hljs.highlightAll();
+            }, true);
+        </script>
+    
+
+    
+
+    
+    
+        
+
+    
+</body>
+
+</html>

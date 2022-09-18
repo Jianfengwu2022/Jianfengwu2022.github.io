@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Building Paginated News Lists in R Markdown and Shiny with DT - Nan Xiao | 肖楠 </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="Create a paginated DT/DataTables widget to display complex lists in single-page R Markdown documents and Shiny apps." />
+    <meta property="og:site_name" content="Nan Xiao | 肖楠" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://jianfengwu2022.github.io/blog/post/dt-news-list/" />
+    <meta property="og:title" content="Building Paginated News Lists in R Markdown and Shiny with DT" />
+    <meta property="og:image" content="https://jianfengwu2022.github.io/image/simon-lee-c17yhU11jyE-unsplash.jpg" />
+    <meta property="og:description" content="Create a paginated DT/DataTables widget to display complex lists in single-page R Markdown documents and Shiny apps." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:site" content="@nanxstats">
+    <meta name="twitter:creator" content="@nanxstats">
+    
+    <meta name="twitter:title" content="Building Paginated News Lists in R Markdown and Shiny with DT" />
+    <meta name="twitter:description" content="Create a paginated DT/DataTables widget to display complex lists in single-page R Markdown documents and Shiny apps." />
+    <meta name="twitter:image" content="https://jianfengwu2022.github.io/image/simon-lee-c17yhU11jyE-unsplash.jpg" />
+
+    <link rel="canonical" href="https://jianfengwu2022.github.io/blog/post/dt-news-list/">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css" integrity="sha512-XWTTruHZEYJsxV3W/lSXG1n3Q39YIWOstqvmFsdNEEQfHoZ6vm6E9GK2OrF6DSJSpIbRbi+Nn0WDPID9O7xB2Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://jianfengwu2022.github.io/css/custom.css" />
+
+    
+    <link rel="stylesheet" href="https://jianfengwu2022.github.io/css/textmate.css" />
+    
+
+    
+
+    <link rel="shortcut icon"
+        href="https://jianfengwu2022.github.io/image/favicon.png">
+
+    
+    <link href="https://jianfengwu2022.github.io/index.xml" rel="alternate" type="application/rss+xml" title="Nan Xiao | 肖楠" />
+    
+</head>
+
+<body>
+    
+<div class="my-4 my-lg-5 header">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        
+                        <a href="https://jianfengwu2022.github.io/">
+                            <img class="logo img-fluid d-block rounded-circle"
+                                src="https://jianfengwu2022.github.io/image/nanxiao.jpg" alt="Portrait of Nan Xiao">
+                        </a>
+                        
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <a href="https://jianfengwu2022.github.io/">
+                            <h1 class="name">Nan Xiao</h1>
+                        </a>
+
+                        <ul class="nav nav-primary">
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-blog"
+                                    href="https://jianfengwu2022.github.io/blog/">
+                                    
+                                    Blog
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-software"
+                                    href="https://jianfengwu2022.github.io/software/">
+                                    
+                                    Software
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-papers"
+                                    href="https://jianfengwu2022.github.io/papers/">
+                                    
+                                    Papers
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-talks"
+                                    href="https://jianfengwu2022.github.io/talks/">
+                                    
+                                    Talks
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-books"
+                                    href="https://jianfengwu2022.github.io/books/">
+                                    
+                                    Books
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <h1 class="blog-post-title">Building Paginated News Lists in R Markdown and Shiny with DT</h1>
+
+                <div class="mb-md-4 meta">
+                    
+                    
+                    <span class="author" title="Nan Xiao">
+                        Nan Xiao
+                    </span>
+                    
+                    
+
+                    <span class="date middot" title='Sun Apr 10 2022 01:00:00 UTC'>
+                        2022-04-10
+                    </span>
+
+                    <span class="reading-time middot">
+                        5 min read
+                    </span>
+
+                    <div class="d-none d-md-inline tags">
+                        <ul class="list-unstyled d-inline">
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/r">R</a>
+                            </li>
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/dt">DT</a>
+                            </li>
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/datatables">DataTables</a>
+                            </li>
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/r-markdown">R Markdown</a>
+                            </li>
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/shiny">Shiny</a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+
+                    <div class="d-none d-md-inline tags">
+                        <ul class="list-unstyled d-inline">
+                            
+                            
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="markdown blog-post-content">
+                    
+    
+
+
+<blockquote>
+<p>The R code in this post is also available as <a href="https://gist.github.com/nanxstats/2f79e09060657e143b19d068bd6d79b8">this GitHub Gist</a>.</p>
+</blockquote>
+<div class="figure">
+<img src="https://jianfengwu2022.github.io/image/simon-lee-c17yhU11jyE-unsplash.jpg" alt="" />
+<p class="caption">Mosaic Mondrian. Original photo by <a href="https://unsplash.com/photos/c17yhU11jyE">Simon Lee</a>.</p>
+</div>
+<div id="context-and-motivation" class="section level2">
+<h2>Context and motivation</h2>
+<p>A single-file R Markdown document often generates single-page HTML outputs.
+Similarly, Shiny is a single-page application framework. The single-page
+nature of these outputs makes it challenging to create experiences like
+pagination to display long and sophisticated lists, which is usually
+accomplished by creating multiple pages and URL routing.</p>
+<p>Serendipitously, I found a
+<a href="https://www.canada.ca/en/news.html">creative DataTables use case</a>
+for displaying a list of news articles metadata on a single page,
+with no additional pagination needed (<a href="datatables-news-list.png">screenshot</a>).
+So I decided to reproduce this use case with <a href="https://github.com/rstudio/DT">DT</a>,
+the time-tested, well-maintained, capable R wrapper for the DataTables JS library.</p>
+<p>You can <a href="dt.html">view the results here</a>. It works in both R Markdown static
+HTML pages and Shiny apps, and the steps are documented below.</p>
+</div>
+<div id="generate-mock-data" class="section level2">
+<h2>Generate mock data</h2>
+<p>To populate the news data into a table, we first generate some fake (mock)
+data using <a href="https://github.com/ropensci/charlatan/">charlatan</a>
+and the <em>lorem ipsum</em> generator in <a href="https://github.com/gagolews/stringi">stringi</a>.</p>
+<pre class="r"><code>set.seed(42)
+k &lt;- 100
+df &lt;- data.frame(
+  title = unlist(purrr::map2(
+    .x = stringr::word(stringi::stri_rand_lipsum(k), start = 1, end = 10),
+    .y = rep(&quot;#&quot;, k),
+    .f = function(.x, .y) as.character(htmltools::tags$a(.x, href = .y))
+  )),
+  time = as.POSIXct(unlist(
+    charlatan::ch_date_time(n = k)
+  ), origin = &quot;1970-01-01 00:00.00 UTC&quot;),
+  inst = sample(charlatan::ch_company(n = 20), size = k, replace = TRUE),
+  type = sample(
+    c(&quot;backgrounders&quot;, &quot;media advisories&quot;, &quot;news releases&quot;, &quot;readouts&quot;, &quot;speeches&quot;),
+    size = k, replace = TRUE
+  ),
+  desc = stringi::stri_rand_lipsum(k),
+  stringsAsFactors = FALSE
+)
+
+df$metadata &lt;- paste(df$time, df$inst, df$type, sep = &quot;&amp;nbsp; | &amp;nbsp;&quot;)
+df &lt;- df[, c(&quot;title&quot;, &quot;time&quot;, &quot;inst&quot;, &quot;type&quot;, &quot;metadata&quot;, &quot;desc&quot;)]
+df &lt;- df[order(df$time, decreasing = TRUE), ]</code></pre>
+</div>
+<div id="create-filter-widgets-using-crosstalk" class="section level2">
+<h2>Create filter widgets using crosstalk</h2>
+<p>I used <a href="https://github.com/rstudio/crosstalk">crosstalk</a> to implement filtering.
+We will need to bind the two example filters here in a list to ensure a joint
+selection behavior.</p>
+<pre class="r"><code>df_shared &lt;- crosstalk::SharedData$new(df)
+
+ui_filters &lt;- list(
+  crosstalk::filter_select(
+    id = &quot;selector-type&quot;,
+    label = &quot;News type&quot;,
+    sharedData = df_shared,
+    group = ~type
+  ),
+  crosstalk::filter_select(
+    id = &quot;selector-inst&quot;,
+    label = &quot;Institution&quot;,
+    sharedData = df_shared,
+    group = ~inst
+  )
+)</code></pre>
+</div>
+<div id="create-a-table-widget-using-dt" class="section level2">
+<h2>Create a table widget using DT</h2>
+<p>We then proceed to create a DataTables widget using <code>DT::datatable()</code>.
+A few less-used options are explained below.</p>
+<ul>
+<li><code>columnDefs</code>: Define the invisible columns for filtering only
+(and show the other columns).</li>
+<li><code>dom</code>: Rearrange the table control element positions.</li>
+<li><code>headerCallback</code>: Hide the table headers.</li>
+<li><code>style</code> and <code>class</code>: Leverage the Bootstrap table styling.</li>
+<li><code>escape = FALSE</code>: Display the news title as HTML links without HTML escaping.
+Please note that if the table content can be user-generated,
+we <strong>must</strong> use <code>htmltools::htmlEscape()</code> to escape the raw data
+to avoid security vulnerabilities like XSS.</li>
+</ul>
+<pre class="r"><code>ui_dt &lt;- DT::datatable(
+  df_shared,
+  options = list(
+    columnDefs = list(list(visible = FALSE, targets = c(1, 2, 3))),
+    dom = &quot;&lt;&#39;top&#39;fil&gt;rt&lt;&#39;bottom&#39;p&gt;&lt;&#39;clear&#39;&gt;&quot;,
+    language = list(search = &quot;Filter items:&quot;),
+    pageLength = 3,
+    headerCallback = DT::JS(
+      &quot;function(thead, data, start, end, display){&quot;,
+      &quot;  $(thead).remove();&quot;,
+      &quot;}&quot;
+    )
+  ),
+  class = c(&quot;table&quot;, &quot;table-striped&quot;, &quot;table-hover&quot;, &quot;table-borderless&quot;),
+  style = &quot;bootstrap4&quot;,
+  rownames = FALSE,
+  escape = FALSE,
+  width = &quot;850px&quot;,
+  selection = &quot;none&quot;
+)</code></pre>
+</div>
+<div id="define-custom-css-styles-for-table-elements" class="section level2">
+<h2>Define custom CSS styles for table elements</h2>
+<p>We can then customize the table style with CSS to match the original use case.
+Mostly, the table columns and table control elements need to be stylized.</p>
+<p>I encounter a blocker in making specific columns
+(title and description) fill the entire row. I asked
+<a href="https://d.cosx.org/d/423087-dt">this question</a> online, and fortunately,
+<a href="http://tc.rbind.io/">Tongchuan</a> offered a simple solution
+by setting <code>td { display: block; }</code>. Although this would make
+every column fill the row, I could create and display a formatted
+<code>metadata</code> column in the beginning and hide the filtering-only
+columns using the <code>columnDefs</code> specification above.</p>
+<pre class="r"><code>css_dt &lt;- textConnection(&quot;
+  table td { display: block; }
+  table td:nth-child(1) { font-size: 1.375rem; }
+  table td:nth-child(2) { color: #555; }
+  div.dataTables_wrapper div.dataTables_filter { display: inline; text-align: left; }
+  div.dataTables_wrapper div.dataTables_filter label { font-weight: 700; }
+  div.dataTables_wrapper div.dataTables_info { display: inline; margin-left: 1ch; padding-top: 0; }
+  div.dataTables_wrapper div.dataTables_length { display: inline; margin-left: 1ch; padding-left: 1ch; border-left: 1px solid;}
+  div.dataTables_wrapper div.dataTables_length label { font-weight: 700; }
+  div.dataTables_wrapper div.dataTables_paginate ul.pagination { justify-content: center; }
+&quot;)</code></pre>
+</div>
+<div id="compose-widgets-into-an-html-page" class="section level2">
+<h2>Compose widgets into an HTML page</h2>
+<p>To preview the table, we compose the elements into an HTML page.</p>
+<p>Note that the <code>shiny</code> calls here are only a convenient way to include the
+Bootstrap dependency. We can then leverage the Bootstrap grid system and
+element styling to position and stylize things easily.</p>
+<p>To <a href="https://rstudio.github.io/DT/shiny.html">use DT in Shiny apps</a> formally,
+you need the <code>DT::renderDT()</code> and <code>DT::DTOutput()</code> construct.
+For R Markdown documents, use the <code>DT::datatable()</code> output
+in an R code chunk directly.</p>
+<pre class="r"><code>card &lt;- function(title, ...) {
+  htmltools::tags$div(
+    class = &quot;card&quot;,
+    htmltools::tags$div(class = &quot;card-header&quot;, title),
+    htmltools::tags$div(class = &quot;card-body&quot;, ...)
+  )
+}
+
+html &lt;- shiny::fluidPage(
+  title = &quot;DT News List Example&quot;,
+  theme = bslib::bs_theme(version = 5, primary = &quot;#295376&quot;),
+  lang = &quot;en&quot;,
+  shiny::includeCSS(css_dt),
+  shiny::fluidRow(
+    shiny::column(
+      width = 10, offset = 1,
+      shiny::fluidRow(
+        shiny::column(
+          width = 3,
+          card(
+            title = &quot;Filter news&quot;,
+            htmltools::tags$p(
+              &quot;Use filters to search for the most recent news articles.&quot;
+            ),
+            ui_filters
+          )
+        ),
+        shiny::column(
+          width = 9,
+          ui_dt
+        )
+      )
+    )
+  )
+)</code></pre>
+<pre class="r"><code>htmltools::browsable(html)</code></pre>
+</div>
+<div id="discussions" class="section level2">
+<h2>Discussions</h2>
+<p>There are still rough edges in this DT table, such as making the table
+responsive and the height of the HTML widget, but they are details.</p>
+<p>It would be fun to implement UI components involving a paginated list
+in Shiny, single-page R Markdown documents, or R Markdown static website
+generators, like distill and the
+<a href="https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html">simple site generator</a>.
+However, blogdown has Hugo’s <a href="https://gohugo.io/templates/pagination/">pagination</a>
+templating support; thus, there is a more native way to solve it.</p>
+<p>On scalability, to avoid stressing the web browser with too many DOM elements
+in a single page when the table gets large, one might want to use
+<a href="https://rstudio.github.io/DT/server.html">server-side processing</a>
+or have a content archiving mechanism.</p>
+</div>
+
+
+
+                </div>
+
+                
+                <div class="navigation">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            
+                            <div class="mt-4 text-start">
+                                <a href="https://jianfengwu2022.github.io/blog/post/ggplot2-color-interpolation/">« Adaptive ggplot2 Color Scales with Color Interpolation</a>
+                            </div>
+                            
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            
+                            <div class="mt-4 text-end">
+                                <a href="https://jianfengwu2022.github.io/blog/post/shiny-bs5-switches/">Five Minute Shiny: Implement the Missing Switch Input with Bootstrap 5 »</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="comments">
+    <div class="py-3 content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-sm-12 col-lg-6">
+                    <div class="comments">
+                        <script src="https://utteranc.es/client.js" repo="nanxstats/blog-comments"
+                            issue-term="pathname" label="comment" theme="github-light" crossorigin="anonymous" async>
+                            </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="footer mt-5">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <hr>
+            </div>
+        </div>
+
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol id="github" viewBox="0 0 16 16">
+                <path
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </symbol>
+            <symbol id="linkedin" viewBox="0 0 16 16">
+                <path
+                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
+            </symbol>
+            <symbol id="twitter" viewBox="0 0 16 16">
+                <path
+                    d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
+            </symbol>
+            <symbol id="rss-fill" viewBox="0 0 16 16">
+                <path
+                    d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm1.5 2.5c5.523 0 10 4.477 10 10a1 1 0 1 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1 0-2zm0 4a6 6 0 0 1 6 6 1 1 0 1 1-2 0 4 4 0 0 0-4-4 1 1 0 0 1 0-2zm.5 7a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+            </symbol>
+            <symbol id="info-circle-fill" viewBox="0 0 16 16">
+                <path
+                    d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+            </symbol>
+        </svg>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                
+                <div class="site-copyright">
+                    © 2011–2022 Nan Xiao
+                </div>
+                
+            </div>
+        </div>
+        <div class="row justify-content-center mt-1 mb-5">
+            <div class="col-sm-12 col-lg-6">
+                <div class="site-social">
+                    <ul>
+                        
+
+                        
+                        <li><a href="https://github.com/nanxstats" target="_blank" rel="noopener">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#github"></use>
+                                </svg>
+                                GitHub</a></li>
+                        
+
+                        
+
+                        
+
+                        
+                        <li><a href="https://twitter.com/nanxstats" target="_blank" rel="noopener">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#twitter"></use>
+                                </svg>
+                                Twitter
+                            </a></li>
+                        
+
+                        
+                        <li><a href="https://www.linkedin.com/in/nanxstats" target="_blank"
+                                rel="noopener">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#linkedin"></use>
+                                </svg>
+                                LinkedIn</a></li>
+                        
+
+                        
+                        <li><a href="https://jianfengwu2022.github.io/colophon/">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#info-circle-fill"></use>
+                                </svg>
+                                Colophon</a></li>
+                        
+
+                        
+                        <li><a href="https://jianfengwu2022.github.io/index.xml" class="mr-0">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#rss-fill"></use>
+                                </svg>
+                                RSS</a></li>
+                        
+
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js" integrity="sha512-gU7kztaQEl7SHJyraPfZLQCNnrKdaQi5ndOyt4L4UPL/FHDd/uB9Je6KDARIqwnNNE27hnqoWLBq+Kpe4iHfeQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/r.min.js" defer></script>
+        
+        <script>
+            window.addEventListener('load', function() {
+                hljs.highlightAll();
+            }, true);
+        </script>
+    
+
+    
+
+    
+    
+        
+<script src="https://jianfengwu2022.github.io/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+</body>
+
+</html>

@@ -1,0 +1,1668 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Fuzz Testing Your R Code - Nan Xiao | 肖楠 </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="Fuzz testing is an alternative approach for validating the robustness of your R code." />
+    <meta property="og:site_name" content="Nan Xiao | 肖楠" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://jianfengwu2022.github.io/blog/post/fuzz-testing-your-r-code/" />
+    <meta property="og:title" content="Fuzz Testing Your R Code" />
+    <meta property="og:image" content="https://jianfengwu2022.github.io/image/log-book-with-computer-bug.jpg" />
+    <meta property="og:description" content="Fuzz testing is an alternative approach for validating the robustness of your R code." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:site" content="@nanxstats">
+    <meta name="twitter:creator" content="@nanxstats">
+    
+    <meta name="twitter:title" content="Fuzz Testing Your R Code" />
+    <meta name="twitter:description" content="Fuzz testing is an alternative approach for validating the robustness of your R code." />
+    <meta name="twitter:image" content="https://jianfengwu2022.github.io/image/log-book-with-computer-bug.jpg" />
+
+    <link rel="canonical" href="https://jianfengwu2022.github.io/blog/post/fuzz-testing-your-r-code/">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css" integrity="sha512-XWTTruHZEYJsxV3W/lSXG1n3Q39YIWOstqvmFsdNEEQfHoZ6vm6E9GK2OrF6DSJSpIbRbi+Nn0WDPID9O7xB2Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://jianfengwu2022.github.io/css/custom.css" />
+
+    
+    <link rel="stylesheet" href="https://jianfengwu2022.github.io/css/textmate.css" />
+    
+
+    
+
+    <link rel="shortcut icon"
+        href="https://jianfengwu2022.github.io/image/favicon.png">
+
+    
+    <link href="https://jianfengwu2022.github.io/index.xml" rel="alternate" type="application/rss+xml" title="Nan Xiao | 肖楠" />
+    
+</head>
+
+<body>
+    
+<div class="my-4 my-lg-5 header">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        
+                        <a href="https://jianfengwu2022.github.io/">
+                            <img class="logo img-fluid d-block rounded-circle"
+                                src="https://jianfengwu2022.github.io/image/nanxiao.jpg" alt="Portrait of Nan Xiao">
+                        </a>
+                        
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <a href="https://jianfengwu2022.github.io/">
+                            <h1 class="name">Nan Xiao</h1>
+                        </a>
+
+                        <ul class="nav nav-primary">
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-blog"
+                                    href="https://jianfengwu2022.github.io/blog/">
+                                    
+                                    Blog
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-software"
+                                    href="https://jianfengwu2022.github.io/software/">
+                                    
+                                    Software
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-papers"
+                                    href="https://jianfengwu2022.github.io/papers/">
+                                    
+                                    Papers
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-talks"
+                                    href="https://jianfengwu2022.github.io/talks/">
+                                    
+                                    Talks
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-books"
+                                    href="https://jianfengwu2022.github.io/books/">
+                                    
+                                    Books
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <h1 class="blog-post-title">Fuzz Testing Your R Code</h1>
+
+                <div class="mb-md-4 meta">
+                    
+                    
+                    <span class="author" title="Nan Xiao">
+                        Nan Xiao
+                    </span>
+                    
+                    
+
+                    <span class="date middot" title='Mon Sep 28 2020 22:30:00 UTC'>
+                        2020-09-28
+                    </span>
+
+                    <span class="reading-time middot">
+                        7 min read
+                    </span>
+
+                    <div class="d-none d-md-inline tags">
+                        <ul class="list-unstyled d-inline">
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/r">R</a>
+                            </li>
+                            
+                            <li class="d-inline middot">
+                                <a href="https://jianfengwu2022.github.io/tags/fuzz-testing">fuzz testing</a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+
+                    <div class="d-none d-md-inline tags">
+                        <ul class="list-unstyled d-inline">
+                            
+                            
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="markdown blog-post-content">
+                    
+    
+<script src="https://jianfengwu2022.github.io/blog/post/fuzz-testing-your-r-code/index_files/header-attrs/header-attrs.js"></script>
+<script src="https://jianfengwu2022.github.io/blog/post/fuzz-testing-your-r-code/index_files/kePrint/kePrint.js"></script>
+<link href="https://jianfengwu2022.github.io/blog/post/fuzz-testing-your-r-code/index_files/lightable/lightable.css" rel="stylesheet" />
+
+
+<p>Good software requires even better testing. Particularly, <a href="https://r-pkgs.org/tests.html">unit testing</a> has been widely used by many R packages as a tool for reducing the number of bugs and improving code structure. A unit test is often written when a single unit of functionality is created in the program. Is there a good way to test a large program or system after it is created? The answer is yes, and one of the approaches people developed is <em>fuzz testing</em>.</p>
+<div class="figure">
+<img src="https://jianfengwu2022.github.io/image/log-book-with-computer-bug.jpg" alt="" />
+<p class="caption">Log book with computer bug. Source: National Museum of American History, accession number <a href="https://americanhistory.si.edu/collections/search/object/nmah_334663">1994.0191</a>.</p>
+</div>
+<p>As the name indicates, fuzz testing focuses on revealing hidden exceptions through the automated generation of a large number of randomized inputs and feeding them to the program (law of large numbers helps). This is especially useful for validating large programs’ robustness where the computational components have complex interactions, and the edge cases are tricky to realize. I agree that this description fits the characteristics of some statistical estimation or inference procedures due to their numerical or probabilistic nature.</p>
+<div id="example-fuzz-testing-oneclust" class="section level2">
+<h2>Example: fuzz testing oneclust</h2>
+<p>In R, there is a nice R package <a href="https://cran.r-project.org/package=fuzzr">fuzzr</a> written by <a href="https://github.com/mdlincoln">Matthew Lincoln</a>. The package offers an example framework for fuzz testing R code. The off-the-shelf functions primarily emphasize the unexpected or non-standard input <strong>types</strong>, while custom tests can be easily created and evaluated.</p>
+<p>Let’s use it to test my R package <a href="https://nanx.me/oneclust/">oneclust</a> released in September 2020. The package is built for maximum homogeneity clustering of one-dimensional data. Although the core is implemented in C++ (statically typed), we will see that the R interface still allows some flexibility on input types.</p>
+<p>The core function <code>oneclust::oneclust()</code> has four arguments:</p>
+<pre><code>oneclust(x, k, w = NULL, sort = TRUE)</code></pre>
+<p>where <code>x</code> is a numeric vector representing the samples to be clustered, <code>k</code> is the number of clusters, <code>w</code> is the optional sample weights vector, and <code>sort</code> indicates if <code>x</code> (and <code>w</code>) should be sorted. Example:</p>
+<pre class="r"><code>library(&quot;oneclust&quot;)
+
+set.seed(42)
+x &lt;- sample(c(
+  rnorm(50, sd = 0.2),
+  rnorm(50, mean = 1, sd = 0.3),
+  rnorm(100, mean = -1, sd = 0.25)
+))
+
+oneclust(x, 3)
+#&gt; $cluster
+#&gt;   [1] 3 1 3 2 1 1 1 3 2 3 2 2 3 1 1 1 1 1 2 1 1 1 1 1 2 3 2 2 1 1 1 2
+#&gt;  [33] 1 1 1 3 1 1 3 1 3 2 1 1 3 2 3 2 1 1 3 3 1 2 3 3 1 1 1 1 3 3 1 1
+#&gt;  [65] 1 1 1 3 2 2 2 2 2 1 1 2 3 2 1 2 1 3 2 3 1 2 3 1 3 1 1 2 1 1 2 3
+#&gt;  [97] 3 1 2 3 2 3 1 1 2 1 3 1 1 1 1 3 1 1 1 1 1 3 1 2 2 1 1 2 1 1 2 2
+#&gt; [129] 2 1 2 1 2 1 3 2 2 1 3 3 2 2 2 1 1 3 1 1 3 1 2 3 2 3 1 3 1 2 1 1
+#&gt; [161] 2 3 1 2 2 3 2 1 1 3 3 1 1 1 1 3 1 3 1 3 1 2 3 2 1 3 1 1 1 1 1 1
+#&gt; [193] 1 1 1 2 3 3 1 1
+#&gt; 
+#&gt; $cut
+#&gt; [1]   1 101 152</code></pre>
+<p>Use <code>fuzzr</code> to test how argument <code>x</code> handles all sorts of input types:</p>
+<pre class="r"><code>library(&quot;fuzzr&quot;)
+library(&quot;kableExtra&quot;)
+
+f &lt;- fuzz_function(oneclust, &quot;x&quot;, k = 3, tests = test_all())
+f |&gt;
+  as.data.frame() |&gt;
+  kbl() |&gt;
+  kable_classic(
+    lightable_options = c(&quot;striped&quot;, &quot;hover&quot;),
+    html_font = &quot;inherit&quot;,
+    font_size = 12
+  )</code></pre>
+<table class=" lightable-classic lightable-striped lightable-hover" style="font-size: 12px; font-family: inherit; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+x
+</th>
+<th style="text-align:left;">
+k
+</th>
+<th style="text-align:left;">
+output
+</th>
+<th style="text-align:left;">
+messages
+</th>
+<th style="text-align:left;">
+warnings
+</th>
+<th style="text-align:left;">
+errors
+</th>
+<th style="text-align:left;">
+result_classes
+</th>
+<th style="text-align:right;">
+results_index
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+char_empty
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=character; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+char_single
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=character; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+char_single_blank
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=character; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+char_multiple
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=character; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+char_multiple_blank
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=character; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+char_with_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=character; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+char_single_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=character; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+char_all_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=character; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+int_empty
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+int_single
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+int_multiple
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+list
+</td>
+<td style="text-align:right;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+int_with_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+int_single_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+int_all_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dbl_empty
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dbl_single
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dbl_mutliple
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+list
+</td>
+<td style="text-align:right;">
+17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dbl_with_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dbl_single_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dbl_all_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fctr_empty
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fctr_single
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fctr_multiple
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+list
+</td>
+<td style="text-align:right;">
+23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fctr_with_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fctr_missing_levels
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+list
+</td>
+<td style="text-align:right;">
+25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fctr_single_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fctr_all_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+27
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lgl_empty
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lgl_single
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+29
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lgl_mutliple
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+list
+</td>
+<td style="text-align:right;">
+30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lgl_with_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lgl_single_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+32
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lgl_all_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+33
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+date_single
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+34
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+date_multiple
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+list
+</td>
+<td style="text-align:right;">
+35
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+date_with_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+date_single_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+date_all_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+38
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raw_empty
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+39
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raw_char
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+index error
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+40
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raw_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+list
+</td>
+<td style="text-align:right;">
+41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+df_complete
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=list; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+42
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+df_empty
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=list; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+43
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+df_one_row
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=list; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+44
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+df_one_col
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+list
+</td>
+<td style="text-align:right;">
+45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+df_with_na
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=list; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+46
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+null_value
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Not compatible with requested type: [type=NULL; target=double].
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+47
+</td>
+</tr>
+</tbody>
+</table>
+<p>As expected, we see that the character and data frame inputs did not go through (Not compatible with requested type: [type=…; target=double]). Inputs with empty or NA values also returned index error. The tests that returned meaningful results include <code>int_multiple</code>, <code>dbl_mutliple</code>, <code>fctr_multiple</code>, <code>fctr_missing_levels</code>, <code>lgl_mutliple</code>, <code>date_multiple</code>, <code>raw_na</code>, <code>df_one_col</code>. It was a bit surprising for me that a factor with missing levels can run here:</p>
+<pre class="r"><code>fuzz_call(f, x = &quot;fctr_missing_levels&quot;)
+#&gt; $fun
+#&gt; [1] &quot;oneclust&quot;
+#&gt; 
+#&gt; $args
+#&gt; $args$x
+#&gt; [1] a b c
+#&gt; Levels: a b c d
+#&gt; 
+#&gt; $args$k
+#&gt; [1] 3</code></pre>
+<p>It means that a “character factor” like the one below can actually be clustered:</p>
+<pre class="r"><code>oneclust(factor(letters[1:3], levels = letters[1:4]), k = 3)
+#&gt; $cluster
+#&gt; [1] 1 2 3
+#&gt; 
+#&gt; $cut
+#&gt; [1] 1 2 3</code></pre>
+<p>After checking the textbooks, we know that factors in R are built on top of integer vectors, so they were probably treated like one. A deeper understanding of R’s vector types helps interpret the other results, too.</p>
+<p>Note that we only focused on the input types here. For statistical computing, the exceptions can be caused by subtle numerical issues and strange artifacts in the data, such as the distribution shapes and outliers. In those domain-specific cases, creating your own tests or even frameworks would be helpful.</p>
+</div>
+
+
+
+                </div>
+
+                
+                <div class="navigation">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            
+                            <div class="mt-4 text-start">
+                                <a href="https://jianfengwu2022.github.io/blog/post/migrating-from-disqus-to-utterances/">« Migrating from Disqus to Utterances</a>
+                            </div>
+                            
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            
+                            <div class="mt-4 text-end">
+                                <a href="https://jianfengwu2022.github.io/blog/post/hugo-tanka-theme-bootstrap/">Tanka: A Minimalist Bootstrap 4 Theme for Hugo and Blogdown »</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="comments">
+    <div class="py-3 content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-sm-12 col-lg-6">
+                    <div class="comments">
+                        <script src="https://utteranc.es/client.js" repo="nanxstats/blog-comments"
+                            issue-term="pathname" label="comment" theme="github-light" crossorigin="anonymous" async>
+                            </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="footer mt-5">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                <hr>
+            </div>
+        </div>
+
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol id="github" viewBox="0 0 16 16">
+                <path
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </symbol>
+            <symbol id="linkedin" viewBox="0 0 16 16">
+                <path
+                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
+            </symbol>
+            <symbol id="twitter" viewBox="0 0 16 16">
+                <path
+                    d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
+            </symbol>
+            <symbol id="rss-fill" viewBox="0 0 16 16">
+                <path
+                    d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm1.5 2.5c5.523 0 10 4.477 10 10a1 1 0 1 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1 0-2zm0 4a6 6 0 0 1 6 6 1 1 0 1 1-2 0 4 4 0 0 0-4-4 1 1 0 0 1 0-2zm.5 7a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+            </symbol>
+            <symbol id="info-circle-fill" viewBox="0 0 16 16">
+                <path
+                    d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+            </symbol>
+        </svg>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-lg-6">
+                
+                <div class="site-copyright">
+                    © 2011–2022 Nan Xiao
+                </div>
+                
+            </div>
+        </div>
+        <div class="row justify-content-center mt-1 mb-5">
+            <div class="col-sm-12 col-lg-6">
+                <div class="site-social">
+                    <ul>
+                        
+
+                        
+                        <li><a href="https://github.com/nanxstats" target="_blank" rel="noopener">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#github"></use>
+                                </svg>
+                                GitHub</a></li>
+                        
+
+                        
+
+                        
+
+                        
+                        <li><a href="https://twitter.com/nanxstats" target="_blank" rel="noopener">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#twitter"></use>
+                                </svg>
+                                Twitter
+                            </a></li>
+                        
+
+                        
+                        <li><a href="https://www.linkedin.com/in/nanxstats" target="_blank"
+                                rel="noopener">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#linkedin"></use>
+                                </svg>
+                                LinkedIn</a></li>
+                        
+
+                        
+                        <li><a href="https://jianfengwu2022.github.io/colophon/">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#info-circle-fill"></use>
+                                </svg>
+                                Colophon</a></li>
+                        
+
+                        
+                        <li><a href="https://jianfengwu2022.github.io/index.xml" class="mr-0">
+                                <svg class="svg-icon mr-1">
+                                    <use xlink:href="#rss-fill"></use>
+                                </svg>
+                                RSS</a></li>
+                        
+
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js" integrity="sha512-gU7kztaQEl7SHJyraPfZLQCNnrKdaQi5ndOyt4L4UPL/FHDd/uB9Je6KDARIqwnNNE27hnqoWLBq+Kpe4iHfeQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/r.min.js" defer></script>
+        
+        <script>
+            window.addEventListener('load', function() {
+                hljs.highlightAll();
+            }, true);
+        </script>
+    
+
+    
+
+    
+    
+        
+<script src="https://jianfengwu2022.github.io/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+</body>
+
+</html>
